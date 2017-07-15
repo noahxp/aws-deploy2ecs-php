@@ -1,8 +1,9 @@
-sudo: required #is required to use docker service in travis
+sudo: required 
 
-language: php #can be any language, just php for example
+language: php
+php:
+  - '7.1.6'
 
-# required, but travis uses older version of docker :(
 services:
   - docker
 
@@ -27,6 +28,8 @@ after_success:
   - echo 'after_success'
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     docker --version;
+    pip install --user awscli;
+    export PATH=$PATH:$HOME/.local/bin;
     eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION});
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
