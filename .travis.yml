@@ -6,8 +6,9 @@ language: php #can be any language, just php for example
 services:
   - docker
 
+# travis runtime environment from here or settings.
 env:
-  DOCKER_IMAGE: docker-php-example
+
 
 # put your normal pre-testing installs here
 install:
@@ -26,11 +27,8 @@ after_success:
   - echo 'after_success'
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     docker --version;
-    pip install --user awscli;
-    export PATH=$PATH:$HOME/.local/bin;
     eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION});
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
-    echo push to ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     fi
