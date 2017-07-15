@@ -1,11 +1,12 @@
 
-# base image from centos:latest 
+# base image
 FROM php:7.1.6-apache
 
-# author noahxp
+# author
 MAINTAINER noahxp <noahxp@gmail.com>
 
-COPY config/php/. /var/www/html/
+
+COPY src/. /var/www/html/
 
 
 
