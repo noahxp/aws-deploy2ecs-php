@@ -33,4 +33,4 @@ after_success:
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     echo push to ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
-  fi
+    fi
