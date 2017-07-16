@@ -36,8 +36,6 @@ script:
 
 
 after_success:
-  on:
-    tags: true
   - echo 'after_success step...'
   - docker --version
   - pip install --user awscli
