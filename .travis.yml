@@ -23,8 +23,8 @@ services:
 # (OPTIONAL) deploy
 # (OPTIONAL) after_deploy
 # after_script
-before_install:
-  - set -e
+# before_install:
+#   - set -e
 
 # install:
 #
@@ -39,6 +39,7 @@ before_install:
 
 
 after_success:
+  - set -e
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     docker --version;
     docker version;
