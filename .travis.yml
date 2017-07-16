@@ -10,19 +10,8 @@ services:
 # travis runtime environment from here or settings.
 env:
 
-
-# put your normal pre-testing installs here
-install:
-  - echo "***** install step *****"
-
-# put your normal testing scripts here
-script:
-  - echo '***** script step *****'
-
-
 before_install:
-  - echo 'before_install'
-
+  - set -e
 
 after_success:
   - echo 'after_success'
