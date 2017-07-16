@@ -1,4 +1,4 @@
-sudo: required 
+sudo: required
 
 language: php
 php:
@@ -33,5 +33,6 @@ after_success:
     eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION});
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+    docker images;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     fi
