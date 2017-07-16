@@ -29,11 +29,12 @@ after_success:
   - set -e
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     docker --version;
+    docker version;
+    docker info;
     pip install --user awscli;
     export PATH=$PATH:$HOME/.local/bin;
     eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION});
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
-    docker images;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     fi
