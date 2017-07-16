@@ -49,4 +49,5 @@ after_success:
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+    docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     fi
