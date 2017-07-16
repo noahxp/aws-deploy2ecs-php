@@ -7,6 +7,10 @@ php:
 services:
   - docker
 
+branches:
+  only:
+    - master
+
 # travis runtime environment from here or settings.
 env:
 
@@ -42,7 +46,7 @@ after_success:
   - export PATH=$PATH:$HOME/.local/bin
   - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
-    export LAST_TAG=git describe $(git rev-list --tags --max-count=1);
+    export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
