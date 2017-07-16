@@ -25,6 +25,7 @@ env:
 # (OPTIONAL) after_deploy
 # after_script
 
+# set -e : when error stop build.
 before_install:
   - set -e
 
