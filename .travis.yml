@@ -26,6 +26,7 @@ before_install:
 
 after_success:
   - echo 'after_success'
+  - set -e
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     docker --version;
     pip install --user awscli;
