@@ -48,7 +48,8 @@ after_success:
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
     docker build -t ${DOCKER_IMAGE} .;
+    docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
-    docker tag ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG} ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+    docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     fi
