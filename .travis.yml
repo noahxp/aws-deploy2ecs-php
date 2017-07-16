@@ -40,9 +40,6 @@ before_install:
 
 
 after_success:
-  - echo '***** after_success *****'
-  - set -e
-  - echo $(date)
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     docker --version;
     docker version;
@@ -55,8 +52,7 @@ after_success:
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     fi
 
-after_failure:
-  - echo '***** after_failure *****'
+# after_failure:
 
 # before_deploy:
 
