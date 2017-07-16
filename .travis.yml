@@ -27,6 +27,7 @@ before_install:
 after_success:
   - echo 'after_success'
   - set -e
+  - echo $(date)
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     docker --version;
     docker version;
