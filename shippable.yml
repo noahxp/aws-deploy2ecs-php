@@ -1,0 +1,50 @@
+# full document : http://docs.shippable.com/reference/shippable-yml/
+# ecs basic settings : http://docs.shippable.com/reference/int-amazon-ecs/
+
+language: php
+php:
+  - '7.1.6'
+
+# services:
+  # - docker
+
+# http://docs.shippable.com/ci/specify-branches/
+branches:
+  only:
+    - master
+
+# environment, standard viriables : http://docs.shippable.com/ci/env-vars/
+env:
+  global:
+
+
+
+# build lifecycle : pre_ci,ci,post_ci,on_success,on_failure,cache,push
+build:
+  pre_ci:
+    - set -e
+  post_ci:
+    - echo 'after_success step...'
+    - docker --version
+    - pip install --user awscli
+    - export PATH=$PATH:$HOME/.local/bin
+    - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
+    - if [[ $TRAVIS_BRANCH == "master" ]]; then
+      export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
+      docker build -t ${DOCKER_IMAGE} .;
+      docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+      docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
+      docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+      docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
+      fi
+
+
+
+# Integrations are used to connect external resources to CI
+# http://docs.shippable.com/integrations/overview/
+integrations:
+  # adding ECR integration so that credentials are available to CI Job
+  # http://docs.shippable.com/integrations/imageRegistries/ecr/
+  hub:
+    - integrationName: dr-ecr
+      type: ecr
