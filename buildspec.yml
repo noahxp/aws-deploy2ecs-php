@@ -1,0 +1,28 @@
+version: 0.1
+
+phases:
+  # installation of packages into the environment, ex: testing framework...
+  install:
+    commands:
+      - echo started on `date`
+      - set -e
+  # commands to run before the build such as login steps or installation of dependencies, ex: login to ECR,run npm , maven...
+  pre_build:
+    commands:
+      - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
+
+  # sequence to run the build such as compilation or/and runing test.
+  build:
+    commands:
+      - if [[ $TRAVIS_BRANCH == "master" ]]; then
+        export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
+        docker build -t ${DOCKER_IMAGE} .;
+        docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+        docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
+        fi
+
+  # commands to run after a build on success or failure, ex: build JAR, push docker image to ECR/docker hub...
+  post_build:
+    commands:
+      - docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+      - docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
