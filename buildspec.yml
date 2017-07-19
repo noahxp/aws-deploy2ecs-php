@@ -14,12 +14,10 @@ phases:
   # sequence to run the build such as compilation or/and runing test.
   build:
     commands:
-      - if [[ $TRAVIS_BRANCH == "master" ]]; then
-        export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
-        docker build -t ${DOCKER_IMAGE} .;
-        docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
-        docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
-        fi
+      - export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
+      - docker build -t ${DOCKER_IMAGE} .;
+      - docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
+      - docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
 
   # commands to run after a build on success or failure, ex: build JAR, push docker image to ECR/docker hub...
   post_build:
