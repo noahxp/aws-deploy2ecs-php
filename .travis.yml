@@ -43,8 +43,10 @@ script:
 after_success:
   - echo 'after_success step...'
   - docker --version
+  - echo 'install aws cli'
   - pip3 install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
+  - echo 'login to aws ecr and start upload to ecr, deploy to ecs'
   - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
@@ -54,10 +56,10 @@ after_success:
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
+    aws ecs register-task-definition --cli-input-json file://.ecs-web.json > ./TASK-NEW.json;
+    cat ./TASK-NEW.json;
+    export NEW_TASK_VERSION=$(cat ./TASK-NEW.json|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinition']['taskDefinitionArn'])");
+    echo ${NEW_TASK_VERSION};
+    aws ecs update-service --cluster web --service php-web --task-definition ${NEW_TASK_VERSION};
     fi
-  - aws ecs register-task-definition --cli-input-json file://.ecs-web.json > ./TASK-NEW.json
-  - cat ./TASK-NEW.json
-  - export NEW_TASK_VERSION=$(cat ./TASK-NEW.json|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinition']['taskDefinitionArn'])")
-  - echo ${NEW_TASK_VERSION}
-  - aws ecs update-service --cluster web --service php-web --task-definition ${NEW_TASK_VERSION}
   - echo `date`
