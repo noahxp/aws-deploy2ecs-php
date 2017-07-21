@@ -54,6 +54,6 @@ after_success:
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     fi
-  - aws ecs register-task-definition --cli-input-json file://.ecs-web.json > ~/tmp/TASK-NEW.JSON
-  - export TASK_VERSION=$(cat ~/tmp/TASK-NEW.JSON|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinitionArns'][0])")
+  - aws ecs register-task-definition --cli-input-json file://.ecs-web.json > ./TASK-NEW.JSON
+  - export TASK_VERSION=$(cat ./TASK-NEW.JSON|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinitionArns'][0])")
   - aws ecs update-service --service php-web --task-definition ${TASK_VERSION}
