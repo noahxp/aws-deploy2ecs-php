@@ -48,6 +48,7 @@ after_success:
   - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
+    echo "last tag:${LAST_TAG}";
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
@@ -56,4 +57,5 @@ after_success:
     fi
   - aws ecs register-task-definition --cli-input-json file://.ecs-web.json > ./TASK-NEW.JSON
   - export TASK_VERSION=$(cat ./TASK-NEW.JSON|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinitionArns'][0])")
+  - echo ${TASK_VERSION}
   - aws ecs update-service --service php-web --task-definition ${TASK_VERSION}
