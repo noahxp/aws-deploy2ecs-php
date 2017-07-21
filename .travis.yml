@@ -60,3 +60,4 @@ after_success:
   - export TASK_VERSION=$(cat ./TASK-NEW.JSON|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinitionArns'][0])")
   - echo ${TASK_VERSION}
   - aws ecs update-service --service php-web --task-definition ${TASK_VERSION}
+  - echo `date`
