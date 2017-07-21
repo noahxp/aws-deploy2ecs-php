@@ -42,7 +42,7 @@ script:
 after_success:
   - echo 'after_success step...'
   - docker --version
-  - pip install --user awscli
+  - pip3 install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
   - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
@@ -53,3 +53,11 @@ after_success:
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     fi
+
+before_deploy:
+  - aws ecs register-task-definition --cli-input-json file://.ecs-web.json > ~/tmp/TASK-NEW.JSON
+
+deploy:
+  # - export TASK_VERSION=$(aws --profile noahxp ecs list-task-definitions --status active --sort desc --max-items 1  --family-prefix php-web | python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinitionArns'][0])")
+  - export TASK_VERSION=$(cat ~/tmp/TASK-NEW.JSON|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinitionArns'][0])")
+  - aws ecs update-service --service php-web --task-definition ${TASK_VERSION}

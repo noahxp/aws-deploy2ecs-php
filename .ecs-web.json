@@ -1,0 +1,20 @@
+{
+    "networkMode": "bridge",
+    "containerDefinitions": [
+        {
+            "memory": 384,
+            "portMappings": [
+                {
+                    "hostPort": 0,
+                    "containerPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "name": "php-web",
+            "image": "796957138374.dkr.ecr.ap-northeast-1.amazonaws.com/docker-php-example:latest",
+            "cpu": 0
+        }
+    ],
+    "family": "php-web"
+}
