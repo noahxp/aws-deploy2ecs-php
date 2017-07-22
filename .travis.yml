@@ -71,13 +71,14 @@ after_success:
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
-    ls -al;
     sed -i 's/{ECS_SERVICE_NAME}/${ECS_SERVICE_NAME}/' .ecs-update-service.json;
     sed -i 's/{CONTAINER_NAME}/${CONTAINER_NAME}/' .ecs-update-service.json;
     sed -i 's/{ECR_REPOSITORY_DOMAIN}/${ECR_REPOSITORY_DOMAIN}/' .ecs-update-service.json;
     sed -i 's/{DOCKER_IMAGE}/${DOCKER_IMAGE}/' .ecs-update-service.json;
+    cat .ecs-update-service.json
+    echo "update ecs task definition";
     aws ecs register-task-definition --cli-input-json file://.ecs-update-service.json > ./TASK-NEW.json;
-    echo "update ecs service message:";
+    echo "after update task message:";
     cat ./TASK-NEW.json;
     export NEW_TASK_VERSION=$(cat ./TASK-NEW.json|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinition']['taskDefinitionArn'])");
     echo "new-task-version=${NEW_TASK_VERSION}";
