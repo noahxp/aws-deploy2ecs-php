@@ -63,11 +63,12 @@ after_success:
   - echo 'install aws cli'
   - pip3 install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
-  - echo 'login to aws ecr and start upload to ecr, deploy to ecs'
+  - echo '*** login to aws ecr and start upload to ecr, deploy to ecs ***'
   - eval $(aws ecr get-login --no-include-email --region ${AWS_DEFAULT_REGION})
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
-    echo "git last tag:${LAST_TAG}";
+    echo "*** git last tag:${LAST_TAG} ***";
+    echo "*** build docker image and push to ecr ***";
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
