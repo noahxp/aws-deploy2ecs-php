@@ -24,7 +24,7 @@ env:
 #     on_success: never # default: change
 #     on_failure: always # default: always
 notifications:
-  mail: false
+  email: false
   slack:
     rooms:
       - ${SLACK_ACCOUNT}:${SLACK_TOKEN}#${SLACK_CHANNEL}"
