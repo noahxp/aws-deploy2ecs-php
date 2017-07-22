@@ -11,10 +11,10 @@
                 }
             ],
             "essential": true,
-            "name": "{CONTAINER_NAME}",
-            "image": "{ECR_REPOSITORY_DOMAIN}:{DOCKER_IMAGE}",
+            "name": "{ECS_CONTAINER_NAME}",
+            "image": "{ECR_REPOSITORY_DOMAIN}/{DOCKER_IMAGE}:latest",
             "cpu": 0
         }
     ],
-    "family": "{ECS_SERVICE_NAME}"
+    "family": "{ECS_TASK_DEFINITION_NAME}"
 }
