@@ -11,10 +11,10 @@
                 }
             ],
             "essential": true,
-            "name": "php-web",
-            "image": "796957138374.dkr.ecr.ap-northeast-1.amazonaws.com/docker-php-example:latest",
+            "name": "{CONTAINER_NAME}",
+            "image": "{ECR_REPOSITORY_DOMAIN}:{DOCKER_IMAGE}",
             "cpu": 0
         }
     ],
-    "family": "php-web"
+    "family": "{ECS_SERVICE_NAME}"
 }
