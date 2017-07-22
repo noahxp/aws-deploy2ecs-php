@@ -12,9 +12,9 @@
             ],
             "essential": true,
             "name": "{CONTAINER_NAME}",
-            "image": "{ECR_REPOSITORY_DOMAIN}:{DOCKER_IMAGE}",
+            "image": "{ECR_REPOSITORY_DOMAIN}:docker-php-example",
             "cpu": 0
         }
     ],
-    "family": "{33333}"
+    "family": "{ECS_SERVICE_NAME}"
 }
