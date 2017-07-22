@@ -51,6 +51,7 @@ before_install:
   - set -e
   - echo `date`
 
+
 # put testing scripts here
 script:
   - echo 'script step...'
@@ -68,14 +69,12 @@ after_success:
   - if [[ $TRAVIS_BRANCH == "master" ]]; then
     export LAST_TAG=$(git describe $(git rev-list --tags --max-count=1));
     echo "*** git last tag:${LAST_TAG} ***";
-
     echo "*** build docker image and push to ecr ***";
     docker build -t ${DOCKER_IMAGE} .;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
-
     echo "*** add new version to ecs task definition ***";
     sed -i -e 's/{ECS_TASK_DEFINITION_NAME}/'"${ECS_TASK_DEFINITION_NAME}"'/g' .ecs-update-service.json;
     sed -i -e 's/{ECS_CONTAINER_NAME}/'"${ECS_CONTAINER_NAME}"'/g' .ecs-update-service.json;
@@ -84,11 +83,9 @@ after_success:
     aws ecs register-task-definition --cli-input-json file://.ecs-update-service.json > ./TASK-NEW.json;
     echo "*** task definition new version content: ***";
     cat ./TASK-NEW.json;
-
     export NEW_TASK_VERSION=$(cat ./TASK-NEW.json|python3 -c "import sys, json; print(json.load(sys.stdin)['taskDefinition']['taskDefinitionArn'])");
     echo "*** new-task-version=${NEW_TASK_VERSION} ***";
     echo "*** update ecs service ***";
     aws ecs update-service --cluster ${ECS_CLUSTER} --service ${ECS_SERVICE_NAME} --task-definition ${NEW_TASK_VERSION};
-
     fi
   - echo `date`
