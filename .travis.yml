@@ -15,6 +15,21 @@ branches:
 env:
 
 
+# notification - https://docs.travis-ci.com/user/notifications
+# notifications:
+#   email:
+#     recipients:
+#       - one@example.com
+#       - other@example.com
+#     on_success: never # default: change
+#     on_failure: always # default: always
+notifications:
+  mail: false
+  slack:
+    rooms:
+      - ${SLACK_ACCOUNT}:${SLACK_TOKEN}#${SLACK_CHANNEL}"
+
+
 # build lifecycle - https://docs.travis-ci.com/user/customizing-the-build/
 # (OPTIONAL) Install apt addons
 # (OPTIONAL) Install cache components
