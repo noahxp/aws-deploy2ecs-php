@@ -49,7 +49,6 @@ notifications:
 # set -e : when error stop build.
 before_install:
   - set -e
-  - echo `date`
 
 
 # put testing scripts here
