@@ -71,6 +71,7 @@ after_success:
     docker tag ${DOCKER_IMAGE}:latest ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:latest;
     docker push ${ECR_REPOSITORY_DOMAIN}/${DOCKER_IMAGE}:${LAST_TAG};
+    ls -al;
     sed -i 's/{ECS_SERVICE_NAME}/${ECS_SERVICE_NAME}/' file://.ecs-update-service.json;
     sed -i 's/{CONTAINER_NAME}/${CONTAINER_NAME}/' file://.ecs-update-service.json;
     sed -i 's/{ECR_REPOSITORY_DOMAIN}/${ECR_REPOSITORY_DOMAIN}/' file://.ecs-update-service.json;
