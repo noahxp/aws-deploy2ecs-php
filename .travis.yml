@@ -55,7 +55,6 @@ before_install:
 script:
   - echo 'script step...'
 
-#
 
 after_success:
   - echo 'after_success step...'
